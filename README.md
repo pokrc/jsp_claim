@@ -14,6 +14,7 @@ only the standard mathlib axioms `propext`, `Classical.choice`, `Quot.sound`).
 | File | Problem | Status |
 | --- | --- | --- |
 | [`JspClaim/JSP000307.lean`](JspClaim/JSP000307.lean) | JSP-000307 — Can three consecutive integers have strictly decreasing largest prime factors? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
+| [`JspClaim/JSP000625.lean`](JspClaim/JSP000625.lean) | JSP-000625 — Erdős–Fuchs theorem (cumulative two-term additive representation counts cannot grow linearly with bounded error) | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
 
 ## Problem JSP-000307 — complete answer
 
@@ -44,6 +45,41 @@ with witness `n = 152`. The proof is fully kernel-checked: the factorizations ar
 derived from the definitions via `Nat.maxPrimeFac_mul`, `Nat.maxPrimeFac_pow` and
 `Nat.Prime.maxPrimeFac_eq_self`, primality facts are decided by kernel reduction
 (`decide`), and the final arithmetic is discharged by `norm_num`.
+The theorem depends only on the standard mathlib axioms
+(`propext`, `Classical.choice`, `Quot.sound`).
+
+## Problem JSP-000625 — complete answer (Erdős–Fuchs)
+
+**Statement** (problem bank, `problems/catalog-0601-0700.md#JSP-000625`):
+
+> Can cumulative two-term additive representation counts grow linearly with bounded error?
+
+**Answer: No.** This is the Erdős–Fuchs theorem (Erdős–Fuchs 1956). For any infinite
+`A ⊆ ℕ`, writing `r(n) = #{(a,a') ∈ A² : a+a' = n}` (ordered pairs) and
+`R(N) = Σ_{n≤N} r(n)`, there is **no** constant `c > 0` such that
+`R(N) = cN + O(1)`.
+
+**Formal statement** (`JSP000625Final.jsp000625`):
+
+```lean
+theorem jsp000625 :
+    ¬ ∃ (A : Set ℕ) (c : ℝ), A.Infinite ∧ 0 < c ∧
+      (∃ C : ℝ, ∀ N : ℕ, |(summatoryRepresentationCount A N : ℝ) - c * (N : ℝ)| ≤ C)
+```
+
+**Proof structure** (kernel-checked, no `sorry`/`admit`/`native_decide`):
+
+1. Generating functions: `g(z) = Σ_{a∈A} z^a`, with `g(q)² = Σ r(n)q^n` (Cauchy square).
+2. Error sequence: `ε(n) = R(n) - c(n+1)` satisfies `ε(n) - ε(n-1) = r(n) - c`.
+3. Series identity: `Σ r(n)z^n = c/(1-z) + (1-z)·Σ ε(n)z^n` for `‖z‖ < 1`.
+4. Error bound: `‖Σ ε(n)q^n‖ ≤ D/(1-q)` when `‖ε(n)‖ ≤ D`.
+5. Main-term lower bound: `(indicatorSeriesReal A 1 q)² ≥ c/(1-q) - D`.
+6. Block Parseval: circle-average of `‖geometricBlock·g‖²` equals the squared block
+   coefficients; upper (circle majorant) and lower (main term) bounds both scale like
+   `M⁷` under the chosen radius `r = 1 - 1/M¹³`.
+7. Contradiction: `(L/2)·M⁷ ≤ RHS ≤ (27c+2D+1)·M⁷` with `L = 2(27c+2D+2)`, so
+   `L/2 = 27c+2D+2 > 27c+2D+1` — impossible.
+
 The theorem depends only on the standard mathlib axioms
 (`propext`, `Classical.choice`, `Quot.sound`).
 
