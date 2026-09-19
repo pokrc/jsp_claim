@@ -14,7 +14,35 @@ only the standard mathlib axioms `propext`, `Classical.choice`, `Quot.sound`).
 | File | Problem | Status |
 | --- | --- | --- |
 | [`JspClaim/JSP000307.lean`](JspClaim/JSP000307.lean) | JSP-000307 — Can three consecutive integers have strictly decreasing largest prime factors? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
+| [`JspClaim/JSP000598.lean`](JspClaim/JSP000598.lean) | JSP-000598 — Can two distinct central binomial coefficients have exactly the same prime divisors? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
 | [`JspClaim/JSP000625.lean`](JspClaim/JSP000625.lean) | JSP-000625 — Erdős–Fuchs theorem (cumulative two-term additive representation counts cannot grow linearly with bounded error) | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
+
+## Problem JSP-000598 — complete answer
+
+**Statement** (problem bank, `problems/catalog-0501-0600.md#JSP-000598`):
+
+> Can two distinct central binomial coefficients have exactly the same prime divisors?
+
+**Answer: Yes.** The minimal witness is `(n, m) = (87, 88)`: the central binomial
+coefficients `C(174,87)` and `C(176,88)` share the same set of prime divisors
+(28 primes each). This example is cited in Erdős–Graham–Ruzsa–Straus (1975).
+
+**Formal statement** (`JSP000598.jsp000598`):
+
+```lean
+theorem jsp000598 : ∃ n m : ℕ, n < m ∧ S n = S m
+```
+
+with `S n := (Nat.centralBinom n).primeFactors` and witness `(87, 88)`. The proof
+avoids computing the 52-digit binomial values: it uses the recurrence
+`(n+1)·C(2(n+1),n+1) = 2(2n+1)·C(2n,n)` at `n = 87` (giving
+`44·C(176,88) = 175·C(174,87)`), Kummer's theorem (`Nat.factorization_choose'`)
+for the divisibility facts `5,7 | C(174,87)` and `2,11 | C(176,88)`, the small
+prime-factor sets `primeFactors 44 = {2,11}`, `primeFactors 175 = {5,7}`, and a
+double inclusion `S(87) ⊆ S(88) ⊆ S(87)` via Euclid's lemma. The theorem depends
+only on the standard mathlib axioms (`propext`, `Classical.choice`, `Quot.sound`).
+
+**Formalization author**: Yao Siqi (GitHub: pokrc).
 
 ## Problem JSP-000307 — complete answer
 

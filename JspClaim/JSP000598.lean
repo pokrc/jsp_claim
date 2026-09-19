@@ -189,10 +189,33 @@ lemma S_87_eq_88 : S 87 = S 88 := by
   unfold S
   exact primeFactors_centralBinom_87_eq_88
 
+-- The two central binomial coefficients are distinct (C(176,88) = 175/44 · C(174,87), and 175/44 ≠ 1)
+lemma centralBinom_87_ne_88 : Nat.centralBinom 87 ≠ Nat.centralBinom 88 := by
+  have h := ratio_44_175  -- 44 * C(176,88) = 175 * C(174,87)
+  have h44nz : (44 : ℕ) ≠ 0 := by norm_num
+  -- Suppose C(174,87) = C(176,88). Then 44·C(87) = 175·C(87), forcing (175-44)·C(87) = 0,
+  -- contradicting C(87) > 0 (a binomial coefficient of positive integers is positive)
+  intro heq
+  have hpos : 0 < Nat.centralBinom 87 := Nat.centralBinom_pos 87
+  have hmul : 44 * Nat.centralBinom 87 = 175 * Nat.centralBinom 87 := by
+    simpa [heq] using h
+  have : (175 - 44) * Nat.centralBinom 87 = 0 := by
+    nlinarith
+  have hdiff : 175 - 44 ≠ 0 := by norm_num
+  have hzero : Nat.centralBinom 87 = 0 := by
+    exact (Nat.mul_eq_zero.mp this).resolve_left hdiff
+  omega
+
 /-- The complete answer to JSP-000598: there exist two distinct central binomial
 coefficients with the same set of prime divisors.  The witness is the pair `(87, 88)`:
-`C(174, 87)` and `C(176, 88)` share the same prime divisors. -/
-theorem jsp000598 : ∃ n m : ℕ, n < m ∧ S n = S m := by
-  refine ⟨87, 88, by norm_num, S_87_eq_88⟩
+`C(174, 87)` and `C(176, 88)` share the same prime divisors, and the coefficients
+are distinct. -/
+theorem jsp000598 : ∃ n m : ℕ, n < m ∧ Nat.centralBinom n ≠ Nat.centralBinom m ∧ S n = S m := by
+  refine ⟨87, 88, ?_⟩
+  constructor
+  · norm_num
+  · constructor
+    · exact centralBinom_87_ne_88
+    · exact S_87_eq_88
 
 end JSP000598
