@@ -4,7 +4,7 @@ Lean 4 (+ mathlib) formalizations of complete solutions to problems from the
 [Justin Sun Prize problem bank](https://github.com/TheJustinSunPrize/awards)
 (*TheJustinSunPrize/awards*, 1,022 problems).
 
-This repository is owned and authored by the submitting GitHub account, and each
+This repository is owned and authored by **Yao Siqi** (GitHub: [pokrc](https://github.com/pokrc); email: yaosiqi777@163.com). Each
 formalization is a **complete Lean proof** of the original problem statement as
 published in the problem bank (no `sorry`, `admit`, or unproved assumptions;
 only the standard mathlib axioms `propext`, `Classical.choice`, `Quot.sound`).
