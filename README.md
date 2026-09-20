@@ -17,6 +17,10 @@ only the standard mathlib axioms `propext`, `Classical.choice`, `Quot.sound`).
 | [`JspClaim/JSP000301.lean`](JspClaim/JSP000301.lean) | JSP-000301 — If two consecutive positive integers are powerful, must at least one be a perfect square? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
 | [`JspClaim/JSP000598.lean`](JspClaim/JSP000598.lean) | JSP-000598 — Can two distinct central binomial coefficients have exactly the same prime divisors? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
 | [`JspClaim/JSP000625.lean`](JspClaim/JSP000625.lean) | JSP-000625 — Erdős–Fuchs theorem (cumulative two-term additive representation counts cannot grow linearly with bounded error) | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
+| [`JspClaim/JSP000689.lean`](JspClaim/JSP000689.lean) | JSP-000689 — Must a uniform hypergraph requiring three colors have maximum degree exponential in its edge size? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
+| [`JspClaim/JSP000243.lean`](JspClaim/JSP000243.lean) | JSP-000243 — What is the shortest integer interval containing distinct denominators whose reciprocals sum to one? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
+| [`JspClaim/JSP000554.lean`](JspClaim/JSP000554.lean) | JSP-000554 — Between consecutive primes, is there an integer whose least prime factor is at least their gap? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
+| [`JspClaim/JSP000546.lean`](JspClaim/JSP000546.lean) | JSP-000546 — Can a product of consecutive terms of an AP with coprime initial term and difference be a perfect power? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
 
 ## Problem JSP-000301 — complete answer
 
