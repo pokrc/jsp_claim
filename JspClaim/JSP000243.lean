@@ -11,25 +11,115 @@ whose reciprocals sum to one?
 Answer: The minimum span is 4, achieved by [2,6] via 1/2 + 1/3 + 1/6 = 1.
 
 Approach:
-  - Small cases (lo=2,3,4) verified by `native_decide` over all subsets.
+  - Small cases (lo=2,3,4): bridge rational sum = 1 → natural sum = L via common
+    denominator L = lcm(lo…lo+3), then kernel-reducible `decide` on the full
+    powerset-quantified natural-number statement. **No `native_decide`**.
   - Large case (lo ≥ 5): at most 4 denominators, each ≥ 5, so sum ≤ 4/5 < 1.
-  - Span ≤ 3 implies at most 4 elements in any interval.
 -/
+
+/-- Common-denominator bridge (forward direction): if every d ∈ S divides L,
+    then the rational unit-fraction sum over S equals 1 implies the
+    natural-number sum of L/d over S equals L. -/
+private lemma unitfrac_sum_le_nat_sum
+    (S : Finset ℕ) (L : ℕ) (hL : 0 < L)
+    (hdiv : ∀ d ∈ S, d ∣ L) (hpos : ∀ d ∈ S, 0 < d)
+    (hsum : (∑ d ∈ S, (1 : ℚ) / d) = 1) :
+    (∑ d ∈ S, L / d) = L := by
+  -- Show (↑(∑ L/d)) = ↑L in ℚ, then exact_mod_cast
+  have hr : (∑ d ∈ S, (L : ℚ) / d) = (L : ℚ) := by
+    calc ∑ d ∈ S, (L : ℚ) / d
+        = ∑ d ∈ S, (L : ℚ) * ((1 : ℚ) / d) := by
+            apply Finset.sum_congr rfl; intro d hd
+            have hd0 : (d : ℚ) ≠ 0 := by exact_mod_cast (hpos d hd).ne'
+            field_simp
+      _ = (L : ℚ) * ∑ d ∈ S, (1 : ℚ) / d := by rw [Finset.mul_sum]
+      _ = (L : ℚ) * 1 := by rw [hsum]
+      _ = ↑L := by norm_num
+  have hcast : ((∑ d ∈ S, L / d : ℕ) : ℚ) = (L : ℚ) := by
+    push_cast
+    rw [← hr]
+    apply Finset.sum_congr rfl; intro d hd
+    exact_mod_cast (Nat.cast_div (hdiv d hd) (by exact_mod_cast (hpos d hd).ne'))
+  exact_mod_cast hcast
+
+/-- No subset of Icc 2 5 has natural sum 60/d = 60 (kernel-reducible `decide`). -/
+private theorem nat_no_rep_2_5 :
+    ∀ S ∈ (Finset.Icc (2 : ℕ) 5).powerset, ¬ (∑ d ∈ S, (60 / d : ℕ)) = 60 := by
+  decide
+
+/-- No subset of Icc 3 6 has natural sum 360/d = 360. -/
+private theorem nat_no_rep_3_6 :
+    ∀ S ∈ (Finset.Icc (3 : ℕ) 6).powerset, ¬ (∑ d ∈ S, (360 / d : ℕ)) = 360 := by
+  decide
+
+/-- No subset of Icc 4 7 has natural sum 840/d = 840. -/
+private theorem nat_no_rep_4_7 :
+    ∀ S ∈ (Finset.Icc (4 : ℕ) 7).powerset, ¬ (∑ d ∈ S, (840 / d : ℕ)) = 840 := by
+  decide
+
+/-- Every element of {2,3,4,5} divides 60. -/
+private lemma divisors_60 : ∀ d ∈ (Finset.Icc (2:ℕ) 5), d ∣ 60 := by
+  intro d hd
+  have hlo : 2 ≤ d := (Finset.mem_Icc.mp hd).1
+  have hhi : d ≤ 5 := (Finset.mem_Icc.mp hd).2
+  interval_cases d <;> norm_num
+
+private lemma divisors_360 : ∀ d ∈ (Finset.Icc (3:ℕ) 6), d ∣ 360 := by
+  intro d hd
+  have hlo : 3 ≤ d := (Finset.mem_Icc.mp hd).1
+  have hhi : d ≤ 6 := (Finset.mem_Icc.mp hd).2
+  interval_cases d <;> norm_num
+
+private lemma divisors_840 : ∀ d ∈ (Finset.Icc (4:ℕ) 7), d ∣ 840 := by
+  intro d hd
+  have hlo : 4 ≤ d := (Finset.mem_Icc.mp hd).1
+  have hhi : d ≤ 7 := (Finset.mem_Icc.mp hd).2
+  interval_cases d <;> norm_num
+
+private lemma pos_of_mem_icc_25 : ∀ d ∈ (Finset.Icc (2:ℕ) 5), 0 < d := by
+  intro d hd; have ⟨hlo, _⟩ := Finset.mem_Icc.mp hd; omega
+
+private lemma pos_of_mem_icc_36 : ∀ d ∈ (Finset.Icc (3:ℕ) 6), 0 < d := by
+  intro d hd; have ⟨hlo, _⟩ := Finset.mem_Icc.mp hd; omega
+
+private lemma pos_of_mem_icc_47 : ∀ d ∈ (Finset.Icc (4:ℕ) 7), 0 < d := by
+  intro d hd; have ⟨hlo, _⟩ := Finset.mem_Icc.mp hd; omega
 
 /-- No subset of distinct integers in `[2,5]` has reciprocals summing to 1. -/
 theorem no_rep_2_5 :
-    ¬ ∃ S ∈ (Finset.Icc (2 : ℕ) 5).powerset, (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
-  native_decide
+    ¬ ∃ S ∈ (Finset.Icc (2 : ℕ) 5).powerset,
+      (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
+  rintro ⟨S, hS, hsum⟩
+  have hdiv : ∀ d ∈ S, d ∣ 60 := by
+    intro d hd; exact divisors_60 d (Finset.mem_powerset.mp hS hd)
+  have hpos : ∀ d ∈ S, 0 < d := by
+    intro d hd; exact pos_of_mem_icc_25 d (Finset.mem_powerset.mp hS hd)
+  have hnat := unitfrac_sum_le_nat_sum S 60 (by norm_num) hdiv hpos hsum
+  exact absurd hnat (nat_no_rep_2_5 S hS)
 
 /-- No subset of distinct integers in `[3,6]` has reciprocals summing to 1. -/
 theorem no_rep_3_6 :
-    ¬ ∃ S ∈ (Finset.Icc (3 : ℕ) 6).powerset, (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
-  native_decide
+    ¬ ∃ S ∈ (Finset.Icc (3 : ℕ) 6).powerset,
+      (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
+  rintro ⟨S, hS, hsum⟩
+  have hdiv : ∀ d ∈ S, d ∣ 360 := by
+    intro d hd; exact divisors_360 d (Finset.mem_powerset.mp hS hd)
+  have hpos : ∀ d ∈ S, 0 < d := by
+    intro d hd; exact pos_of_mem_icc_36 d (Finset.mem_powerset.mp hS hd)
+  have hnat := unitfrac_sum_le_nat_sum S 360 (by norm_num) hdiv hpos hsum
+  exact absurd hnat (nat_no_rep_3_6 S hS)
 
 /-- No subset of distinct integers in `[4,7]` has reciprocals summing to 1. -/
 theorem no_rep_4_7 :
-    ¬ ∃ S ∈ (Finset.Icc (4 : ℕ) 7).powerset, (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
-  native_decide
+    ¬ ∃ S ∈ (Finset.Icc (4 : ℕ) 7).powerset,
+      (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
+  rintro ⟨S, hS, hsum⟩
+  have hdiv : ∀ d ∈ S, d ∣ 840 := by
+    intro d hd; exact divisors_840 d (Finset.mem_powerset.mp hS hd)
+  have hpos : ∀ d ∈ S, 0 < d := by
+    intro d hd; exact pos_of_mem_icc_47 d (Finset.mem_powerset.mp hS hd)
+  have hnat := unitfrac_sum_le_nat_sum S 840 (by norm_num) hdiv hpos hsum
+  exact absurd hnat (nat_no_rep_4_7 S hS)
 
 /-- Enlarging the right endpoint preserves representability. -/
 theorem hasUnitFractionSumOne_mono_right
@@ -48,7 +138,8 @@ theorem hasUnitFractionSumOne_mono_right
 theorem no_rep_span_le_three_large_start
     {lo hi : ℕ} (hlo : 5 ≤ lo) (hlohi : lo ≤ hi)
     (hspan : hi ≤ lo + 3) :
-    ¬ ∃ S ∈ (Finset.Icc lo hi).powerset, (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
+    ¬ ∃ S ∈ (Finset.Icc lo hi).powerset,
+      (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
   rintro ⟨S, hS, hsum⟩
   have hsub : S ⊆ Finset.Icc lo hi := Finset.mem_powerset.mp hS
 
@@ -80,7 +171,8 @@ theorem no_rep_span_le_three_large_start
 theorem no_rep_span_le_three
     {lo hi : ℕ} (hlo : 2 ≤ lo) (hlohi : lo ≤ hi)
     (hspan : hi ≤ lo + 3) :
-    ¬ ∃ S ∈ (Finset.Icc lo hi).powerset, (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
+    ¬ ∃ S ∈ (Finset.Icc lo hi).powerset,
+      (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
   by_cases h5 : 5 ≤ lo
   · exact no_rep_span_le_three_large_start h5 hlohi hspan
   · have hcases : lo = 2 ∨ lo = 3 ∨ lo = 4 := by omega
@@ -94,9 +186,12 @@ theorem no_rep_span_le_three
 
 /-- The interval `[2,6]` attains the optimum with denominators `2,3,6`. -/
 theorem has_rep_2_6 :
-    ∃ S ∈ (Finset.Icc (2 : ℕ) 6).powerset, (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
+    ∃ S ∈ (Finset.Icc (2 : ℕ) 6).powerset,
+      (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
   refine ⟨{2, 3, 6}, ?_, ?_⟩
-  · exact Finset.mem_powerset.mpr (by intro x hx; simp only [Finset.mem_insert, Finset.mem_singleton] at hx; rcases hx with rfl | rfl | rfl <;> norm_num)
+  · exact Finset.mem_powerset.mpr (by
+      intro x hx; simp only [Finset.mem_insert, Finset.mem_singleton] at hx
+      rcases hx with rfl | rfl | rfl <;> norm_num)
   · norm_num [Finset.sum_insert, Finset.sum_singleton]
 
 /-- Main formal answer:
@@ -105,7 +200,8 @@ theorem has_rep_2_6 :
 theorem jsp000243 :
     (∀ lo hi : ℕ, 2 ≤ lo → lo ≤ hi →
       (∃ S ∈ (Finset.Icc lo hi).powerset, (∑ d ∈ S, (1 : ℚ) / d) = 1) → 4 ≤ hi - lo) ∧
-    ∃ S ∈ (Finset.Icc (2 : ℕ) 6).powerset, (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
+    ∃ S ∈ (Finset.Icc (2 : ℕ) 6).powerset,
+      (∑ d ∈ S, (1 : ℚ) / d) = 1 := by
   constructor
   · intro lo hi hlo hlohi hrep
     by_contra hnot
