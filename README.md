@@ -14,8 +14,33 @@ only the standard mathlib axioms `propext`, `Classical.choice`, `Quot.sound`).
 | File | Problem | Status |
 | --- | --- | --- |
 | [`JspClaim/JSP000307.lean`](JspClaim/JSP000307.lean) | JSP-000307 — Can three consecutive integers have strictly decreasing largest prime factors? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
+| [`JspClaim/JSP000301.lean`](JspClaim/JSP000301.lean) | JSP-000301 — If two consecutive positive integers are powerful, must at least one be a perfect square? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
 | [`JspClaim/JSP000598.lean`](JspClaim/JSP000598.lean) | JSP-000598 — Can two distinct central binomial coefficients have exactly the same prime divisors? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
 | [`JspClaim/JSP000625.lean`](JspClaim/JSP000625.lean) | JSP-000625 — Erdős–Fuchs theorem (cumulative two-term additive representation counts cannot grow linearly with bounded error) | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
+
+## Problem JSP-000301 — complete answer
+
+**Statement** (problem bank, `problems/catalog-0301-0400.md#JSP-000301`):
+
+> If two consecutive positive integers are powerful, must at least one be a perfect square?
+
+**Answer: No.** The consecutive powerful numbers `12167 = 23³` and
+`12168 = 2³·3²·13²` are both powerful and neither is a perfect square
+(Golomb 1970).
+
+**Formal statement** (`JSP000301.jsp000301`):
+
+```lean
+theorem jsp000301 : ∃ a b : ℕ, a + 1 = b ∧ Powerful a ∧ Powerful b ∧
+    ¬ (∃ m : ℕ, m ^ 2 = a) ∧ ¬ (∃ m : ℕ, m ^ 2 = b)
+```
+
+with `Powerful n := ∀ p, p.Prime → p ∣ n → 2 ≤ n.factorization p` and witness
+`(a, b) = (12167, 12168)`. The proof uses `Nat.Prime.pow_dvd_iff_le_factorization`
+to convert the exponent lower bounds into norm_num-decidable divisibility, and
+`Nat.sqrt_add_eq'` + `Nat.sqrt_eq'` to show `Nat.sqrt 12167 = Nat.sqrt 12168 = 110`,
+so neither number can be a square. The theorem depends only on the standard mathlib
+axioms (`propext`, `Classical.choice`, `Quot.sound`).
 
 ## Problem JSP-000598 — complete answer
 
@@ -30,7 +55,7 @@ coefficients `C(174,87)` and `C(176,88)` share the same set of prime divisors
 **Formal statement** (`JSP000598.jsp000598`):
 
 ```lean
-theorem jsp000598 : ∃ n m : ℕ, n < m ∧ S n = S m
+theorem jsp000598 : ∃ n m : ℕ, n < m ∧ Nat.centralBinom n ≠ Nat.centralBinom m ∧ S n = S m
 ```
 
 with `S n := (Nat.centralBinom n).primeFactors` and witness `(87, 88)`. The proof
