@@ -21,6 +21,7 @@ only the standard mathlib axioms `propext`, `Classical.choice`, `Quot.sound`).
 | [`JspClaim/JSP000243.lean`](JspClaim/JSP000243.lean) | JSP-000243 — What is the shortest integer interval containing distinct denominators whose reciprocals sum to one? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
 | [`JspClaim/JSP000554.lean`](JspClaim/JSP000554.lean) | JSP-000554 — Between consecutive primes, is there an integer whose least prime factor is at least their gap? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
 | [`JspClaim/JSP000546.lean`](JspClaim/JSP000546.lean) | JSP-000546 — Can a product of consecutive terms of an AP with coprime initial term and difference be a perfect power? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
+| [`JspClaim/JSP000183.lean`](JspClaim/JSP000183.lean) | JSP-000183 — Must an infinite walk in three-dimensional space using a finite set of step vectors visit three collinear points? | ✅ Complete, compiles with Lean `v4.34.0` / mathlib `v4.34.0` |
 
 ## Problem JSP-000301 — complete answer
 
