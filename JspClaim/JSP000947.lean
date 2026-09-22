@@ -3,21 +3,31 @@ import Mathlib.Tactic
 namespace JSP000947
 
 /-!
-# JSP-000947 — Is there an integer whose differences from every permitted smaller power of two are all prime?
+# JSP-000947 — **no submission; this file is not a solution**
 
-**Problem** (`problems/catalog-0901-1000.md#JSP-000947`):
-> Is there an integer whose differences from every permitted smaller power of two are all prime?
+JSP-000947 is Erdős problem #1142 (https://www.erdosproblems.com/1142, Va99 §1.7):
 
-**Answer: YES.** The integer n = 45 has the property that for every permitted smaller
-power of two 2ᵏ < 45 (k = 1..5, i.e. 2, 4, 8, 16, 32), the difference 45 − 2ᵏ is prime:
+> Are there infinitely many `n` (or any `n > 105`) such that `n − 2^k` is prime for
+> all `1 < 2^k < n`?
 
-  45 − 2  = 43  (prime)
-  45 − 4  = 41  (prime)
-  45 − 8  = 37  (prime)
-  45 − 16 = 29  (prime)
-  45 − 32 = 13  (prime)
+The known instances are exactly `4, 7, 15, 21, 45, 75, 105` (OEIS A039669). The open
+question is whether **any** `n > 105` exists, in particular whether there are
+infinitely many.
 
-The next power 64 exceeds 45, so the five differences above are all the permitted ones.
+**Warning.** A bare reading of the catalog's problem description
+(`problems/catalog-0901-1000.md#JSP-000947`, "Is there an integer whose differences
+from every permitted smaller power of two are all prime?") invites the reading
+"exhibit one integer", which is trivially satisfied by the *known* value `n = 45`
+formalized below. That is **not** the problem: the quantifier over `n` is missing
+from the paraphrase. The results here are therefore the smallest known instance and
+nothing more; they do not solve, refute or advance JSP-000947, and no award claim is
+made for it. A correction for the description has been filed with the maintainers.
+
+For `n = 45` and `k = 1..5` (i.e. `2^k ∈ {2,4,8,16,32}`), `45 − 2^k` is prime:
+
+  45 − 2  = 43,  45 − 4  = 41,  45 − 8  = 37,  45 − 16 = 29,  45 − 32 = 13
+
+and `2^6 = 64 ≥ 45`, so those five are all the differences with `1 < 2^k < 45`.
 -/
 
 /-- If 2^k < 45 then k ≤ 5 (since 2^6 = 64 ≥ 45). -/
@@ -49,9 +59,10 @@ theorem diffs_prime :
     Nat.Prime (45 - 16) ∧ Nat.Prime (45 - 32) := by
   norm_num
 
-/-- Main theorem: there is an integer n whose differences from every permitted smaller
-    power of two are all prime.  Witness: n = 45. -/
-theorem jsp000947 :
+/-- The known instance `n = 45`: for every `k` with `1 ≤ k` and `2^k < 45`, the
+difference `45 − 2^k` is prime. This is the recorded value from OEIS A039669 and is
+**not** a solution to JSP-000947/Erdős #1142, which asks whether any `n > 105` exists. -/
+theorem known_instance_45 :
     ∃ n : ℕ, ∀ k : ℕ, 1 ≤ k → 2 ^ k < n → Nat.Prime (n - 2 ^ k) := by
   refine ⟨45, ?_⟩
   intro k hk hklt
