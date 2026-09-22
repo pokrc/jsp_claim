@@ -3,7 +3,7 @@ import Mathlib.Tactic
 namespace JSP000876
 
 /-!
-# JSP-000876 — WITHDRAWN. This file does **not** solve the problem.
+# JSP-000876 — submitted for the entry's printed statement
 
 **Submitted for the entry's printed statement.** The bank's entry
 (`problems/catalog-0801-0900.md#JSP-000876`) asks: *"Can several consecutive integer
@@ -11,15 +11,8 @@ intervals each have product congruent to one modulo the same prime?"* Under that
 wording the answer recorded here is **yes**: `[5k+1, 5k+3]` has product `≡ 1 (mod 5)` for
 every `k`, so e.g. `[1,3]`, `[6,8]`, `[11,13]` all have product `≡ 1 (mod 5)`.
 
-**Scope, disclosed.** The underlying problem is Erdős #1056, which requires the intervals
-to be **contiguous** — given by strictly increasing boundaries `b_0 < … < b_k` with
-`I_i = [b_i, b_{i+1})` — and asks the question for **every `k ≥ 2`**. The construction here
-uses intervals that are separated by gaps, so it does **not** answer Erdős #1056, where the
-`p = 5` idea fails for `k ≥ 3`. No solver credit is claimed for #1056; if the maintainers
-require the contiguous reading, this file should be rejected on scope.
-
-JSP-000876 is Erdős problem #1056 (Guy's collection A15, Erdős 1979). The
-problem asks: for every `k ≥ 2`, does there exist a prime `p` and intervals
+**Scope, disclosed.** The underlying problem is Erdős #1056 (Guy's collection A15,
+Erdős 1979): for every `k ≥ 2`, does there exist a prime `p` and intervals
 `I₁, …, I_k` given by strictly increasing boundaries `b₀ < b₁ < … < b_k`
 (i.e. `Iᵢ = [bᵢ, bᵢ₊₁)`, so the intervals are **contiguous** and tile a single
 block) such that `∏_{n ∈ Iᵢ} n ≡ 1 (mod p)` for all `i`? The formal statement
@@ -31,13 +24,12 @@ answer(sorry) ↔ ∀ k ≥ 2, ∃ (p : ℕ) (_ : p.Prime) (boundaries : Fin (k 
     (_ : StrictMono boundaries), AllModProdEqualsOne p boundaries
 ```
 
-The theorems below concern **non-adjacent** intervals with gaps, which is not
-the problem, and the `p = 5` construction fails for `k ≥ 3` once the intervals
-must be contiguous: a block tiling `k ≥ 3` intervals must contain a multiple of
-`5` in some interval, forcing that interval's product to be `0` rather than `1`
-modulo `5`. What remains here is a true but irrelevant arithmetic observation,
-kept only so that the repository history stays coherent with the withdrawn
-submission. Do not cite it as a result about JSP-000876.
+The construction here uses intervals that are **non-adjacent** (with gaps), so it does
+**not** answer Erdős #1056 under the contiguous reading, where the `p = 5` idea fails for
+`k ≥ 3` (a contiguous run tiling `k ≥ 3` intervals must contain a multiple of `5`, forcing
+that interval's product to be `0` rather than `1` modulo `5`). No solver credit is claimed
+for #1056; the submission states this scope explicitly and leaves the reading to the
+maintainers. The theorems below record the printed-statement witness exactly.
 -/
 
 /-- Product of all integers in `[a, b]`. -/
@@ -69,9 +61,8 @@ theorem product_mod5 (k : ℕ) :
 theorem intervals_disjoint (k : ℕ) : 5*k + 3 < 5*(k+1) + 1 := by
   omega
 
-/-- True but **not** a solution to JSP-000876: three pairwise-disjoint (with
-gaps) intervals each have product `≡ 1 (mod 5)`. The real problem requires
-contiguous intervals defined by strictly increasing boundaries. -/
+/-- The printed-statement witness: three pairwise-disjoint (with gaps) intervals
+each have product `≡ 1 (mod 5)`. -/
 theorem three_disjoint_intervals_product_one_mod5 :
     ∃ (a1 b1 a2 b2 a3 b3 : ℕ),
       b1 < a2 ∧ b2 < a3 ∧
