@@ -24,6 +24,9 @@ lake exe cache get && lake build JspClaim
 | `JspClaim/JSP000598.lean` | JSP-000598 | the pair `(87, 88)` has central binomial coefficients with the same set of prime divisors | printed statement of the entry; the source problem (Erdős #730) asks the infinitude version, stated in the module |
 | `JspClaim/JSP000243.lean` | JSP-000243 | the shortest denominator interval with reciprocal sum `1` has span `4`, attained by `[2, 6]` | printed statement of the entry; the entry's cited source is Croot's asymptotic width law, stated in the module |
 | `JspClaim/JSP000546.lean` | JSP-000546 | the `k = 3` example `18·25·32 = 120^2` in an AP with `gcd(a,d) = 1` | printed statement of the entry; the source problem (Erdős #672) requires `k ≥ 4`, stated in the module |
+| `JspClaim/JSP000554.lean` | JSP-000554 | `(7, 11)` is a pair of consecutive primes with no integer of least prime factor `≥ 4` between them | submitted for the printed statement; the entry's recorded solution (Gafni–Tao, Erdős #682) answers the *almost all n* version affirmatively, stated in the module |
+| `JspClaim/JSP000876.lean` | JSP-000876 | intervals `[5k+1,5k+3]` have product `≡ 1 (mod 5)` | submitted for the printed statement; the source problem (Erdős #1056) requires contiguous intervals, stated in the module |
+| `JspClaim/JSP000947.lean` | JSP-000947 | `n = 45`: `45 − 2^k` is prime for every `1 < 2^k < 45` | submitted for the printed statement; the source problem (Erdős #1142) asks `n > 105` / infinitely many, stated in the module |
 | `JspClaim/JSP000554.lean` | JSP-000554 | `(7, 11)` is a pair of consecutive primes with no integer of least prime factor `≥ 4` between them | not submitted — the entry's recorded solution (Gafni–Tao, Erdős #682) answers the *almost all n* question in the affirmative |
 
 Each module states the exact scope of what it proves at the top of the file, and each submission
