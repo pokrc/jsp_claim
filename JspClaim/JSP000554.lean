@@ -2,6 +2,9 @@ import Mathlib.Tactic
 
 namespace JSP000554
 
+/-!
+
+
 **Submitted for the entry's printed statement.** The bank's entry
 (`problems/catalog-0501-0600.md#JSP-000554`) asks: *"Between consecutive primes, is there an
 integer whose least prime factor is at least their gap?"* Read as a universal question over
@@ -13,6 +16,8 @@ the *almost all n* version **affirmatively** (`≪ X/(log X)^2` exceptional `n �
 does not formalize that theorem and no solver credit is claimed; it is the negation of the
 universal reading. A correction proposing that the entry state the "almost all n" scope has
 been filed (#3342).
+
+-/
 
 def ConsecutivePrimes (p q : ℕ) : Prop :=
   p.Prime ∧ q.Prime ∧ p < q ∧
