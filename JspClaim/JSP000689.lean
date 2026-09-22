@@ -2,6 +2,11 @@ import Mathlib.Combinatorics.Hypergraph.Basic
 import Mathlib.Tactic
 import JspClaim.JSP000689_helpers
 
+-- The Fano-plane checks below are small finite computations discharged by the kernel
+-- `decide` (no `native_decide`, no extra axioms); the option raises the elaborator
+-- recursion limit that `decide` needs on the 128-coloring search.
+set_option maxRecDepth 100000
+
 /-!
 # JSP-000689 — Erdős–Lovász: uniform hypergraphs requiring three colors
 
@@ -30,8 +35,8 @@ The Fano plane is the hypergraph on `Fin 7` with the seven 3-uniform lines
   `i % 3`);
 * its maximum degree is 3 (each vertex lies on exactly 3 lines).
 
-All Fano facts below are proved with zero `sorry` (the only computations are the
-tiny exhaustive searches, discharged by `native_decide`).  The Erdős–Lovász lower
+All Fano facts below are proved with zero `sorry` and without `native_decide` (the
+only computations are tiny exhaustive searches, discharged by kernel `decide`).  The Erdős–Lovász lower
 bound is proved below for finite-vertex hypergraphs (`Hypergraph (Fin n)`, the
 setting in which the problem is posed), also with zero `sorry`, using the
 Lovász Local Lemma developed in `JspClaim.JSP000689_helpers`.
@@ -92,7 +97,7 @@ namespace JSP000689
 /-! ## The Fano plane -/
 
 /-- The seven lines of the Fano plane, as a `Finset` of `Finset`s on `Fin 7` (this explicit
-finite description is what makes the exhaustive `native_decide` checks possible). -/
+finite description is what makes the exhaustive `decide` checks possible). -/
 def fanoLines : Finset (Finset (Fin 7)) :=
   { {0, 1, 2}, {0, 3, 4}, {0, 5, 6}, {1, 3, 5}, {1, 4, 6}, {2, 3, 6}, {2, 4, 5} }
 
@@ -113,7 +118,7 @@ lemma mem_fano_edgeSet {e : Set (Fin 7)} : e ∈ E(fano) ↔ ∃ f ∈ fanoLines
 
 /-- Computational verification: every line of the Fano plane has exactly 3 vertices. -/
 lemma fanoLines_uniform : ∀ f ∈ fanoLines, f.card = 3 := by
-  native_decide
+  decide
 
 /-- The Fano plane is 3-uniform. -/
 lemma fano_uniform : fano.Uniform 3 := by
@@ -130,7 +135,7 @@ def fanoDegree (v : Fin 7) : ℕ :=
 
 /-- Computational verification: every vertex lies on exactly 3 lines. -/
 lemma fanoDegree_eq_three (v : Fin 7) : fanoDegree v = 3 := by
-  fin_cases v <;> native_decide
+  fin_cases v <;> decide
 
 /-- The abstract `degree` (counting edges of the hypergraph) agrees with the direct
 computation on the finset of lines. -/
@@ -180,7 +185,7 @@ lemma fano_maxDegree : fano.HasMaxDegree 3 := by
 line (exhaustive search over all `2^7 = 128` colorings). -/
 lemma fano_not_two_colorable_brute :
     ∀ c : Fin 7 → Fin 2, ∃ f ∈ fanoLines, ∀ x ∈ f, ∀ y ∈ f, c x = c y := by
-  native_decide
+  decide
 
 /-- The Fano plane is not 2-colorable (fails Property B). -/
 lemma fano_not_two_colorable : ¬ Hypergraph.IsColorable fano 2 := by
@@ -202,7 +207,7 @@ def fanoColoring : Fin 7 → Fin 3 :=
 different colors under `fanoColoring`. -/
 lemma fanoColoring_brute :
     ∀ f ∈ fanoLines, ∃ x ∈ f, ∃ y ∈ f, fanoColoring x ≠ fanoColoring y := by
-  native_decide
+  decide
 
 /-- `fanoColoring` is a proper 3-coloring of the Fano plane. -/
 lemma fanoColoring_proper : Hypergraph.IsProperColoring fano fanoColoring := by
