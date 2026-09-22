@@ -6,6 +6,14 @@ import Mathlib.Tactic.NormNum
 /-!
 # JSP-000598 — Two distinct central binomial coefficients with the same prime divisors
 
+> **Scope (2026-09-22).** JSP-000598 is Erdős problem #730: *are there infinitely many
+> pairs n ≠ m with C(2n,n) and C(2m,m) sharing the same set of prime divisors?*, solved
+> by GPT Pro (prompted by Price), who proved ≫x^{1/2} many n ≤ x have C(2n,n) and
+> C(2n+2,n+1) with the same prime divisors. This file formalizes only the recorded example
+> pair (87, 88) under the entry's printed existence wording. It is **not** a formalization
+> of that theorem, and the award submission for it has been withdrawn.
+
+
 Problem bank entry (TheJustinSunPrize/awards, `problems/catalog-0501-0600.md#JSP-000598`):
 
 > **Can two distinct central binomial coefficients have exactly the same prime divisors?**

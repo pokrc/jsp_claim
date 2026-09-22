@@ -4,6 +4,13 @@ import Mathlib.Tactic.NormNum
 /-!
 # JSP-000307 — Three consecutive integers with strictly decreasing largest prime factors
 
+> **Scope (2026-09-22).** JSP-000307 is Erdős problem #372: *there are infinitely many
+> n with P(n) > P(n+1) > P(n+2)*, solved by Balog [Ba01] (≫√x many n ≤ x), with the
+> conjecture that the density is 1/6. This file formalizes only the finite witness
+> 152, 153, 154 under the entry's printed existence wording. It is **not** a formalization
+> of Balog's theorem, and the award submission for it has been withdrawn.
+
+
 Problem bank entry (TheJustinSunPrize/awards, `problems/catalog-0301-0400.md#JSP-000307`):
 
 > **Can three consecutive integers have strictly decreasing largest prime factors?**
