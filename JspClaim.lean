@@ -5,3 +5,5 @@ import JspClaim.JSP000546
 import JspClaim.JSP000554
 import JspClaim.JSP000598
 import JspClaim.JSP000689
+import JspClaim.JSP000876
+import JspClaim.JSP000947
