@@ -5,10 +5,23 @@ namespace JSP000243
 /-!
 # JSP-000243 — shortest interval for a distinct unit-fraction representation of 1
 
-Problem: What is the shortest integer interval containing distinct denominators
-whose reciprocals sum to one?
+Problem as printed: What is the shortest integer interval containing distinct
+denominators whose reciprocals sum to one?
 
-Answer: The minimum span is 4, achieved by [2,6] via 1/2 + 1/3 + 1/6 = 1.
+Answer (this file): The minimum span is 4, achieved by [2,6] via
+1/2 + 1/3 + 1/6 = 1.
+
+**Scope (2026-09-22).** This settles the *literal* minimal-span reading: over all
+representations by distinct denominators `≥ 2`, every supporting interval `[lo, hi]`
+has `hi − lo ≥ 4`, and `[2, 6]` attains it. It does **not** formalize the entry's
+recorded solution: the entry cites Croot [Cr01], *On unit fractions with
+denominators in short intervals*, Acta Arith. 99 (2001), 99–114, which settles
+Erdős problems #286 and #284 — for every `k ≥ 2` there is an interval of width
+`(e − 1 + o(1))k` holding `k` distinct denominators with reciprocal sum 1,
+equivalently `f(k) = (1 + o(1))k/(e − 1)`. That asymptotic law for the minimal
+width as a function of `k`, and Croot's construction, are **not** proved here and
+are not claimed. The scope question is raised with the maintainers in the
+submission for this problem.
 
 Approach:
   - Small cases (lo=2,3,4): bridge rational sum = 1 → natural sum = L via common
