@@ -5,6 +5,17 @@ import Mathlib.Algebra.Ring.Parity
 /-!
 # JSP-000183 — Must an infinite walk in three-dimensional space using a finite set of step vectors visit three collinear points?
 
+> **WITHDRAWN (2026-09-22) — not an independent formalization.**
+> This file is an adaptation of the authors' own proof: `ekalvi/erdos-193`,
+> `formal/Hilbert193/Hilbert193/Continuity.lean` at commit `fca4e1bd` (2026-09-04),
+> which `google-deepmind/formal-conjectures` links as the official formal proof of
+> Erdős #193. Eight of that file's nine top-level declaration names appear unchanged
+> here (`Direction`, `directionOfFin`, `displacement`, `finiteStepMenu`,
+> `finiteStepMenu_finite`, `gaussianStepVector`, `gaussianStepVector_bounds`,
+> `taggedLift_step_mem`). The award submission and claim #2201 have been withdrawn;
+> no priority claim and no credit are requested for JSP-000183.
+
+
 Problem bank entry (`problems/catalog-0101-0200.md#JSP-000183`):
 
 > Must an infinite walk in three-dimensional space using a finite set of step vectors

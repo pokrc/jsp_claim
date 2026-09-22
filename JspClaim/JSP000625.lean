@@ -9,6 +9,14 @@ import Mathlib.Tactic.Ring
 /-!
 # JSP-000625 (Erdős–Fuchs) — Final scratch
 
+> **WITHDRAWN (2026-09-22) — not an independent formalization.**
+> This development follows `plby/lean-proofs` `src/latest/ErdosProblems/Erdos763.lean`
+> (added 2026-08-17, 0 `sorry`): 58 of its 62 top-level declaration names are identical,
+> including the same `chosenRadius` definition and the same auxiliary lemmas. The award
+> submission for JSP-000625 and claim #1950 have been withdrawn, no credit is claimed for
+> this problem, and the earlier file in `plby/lean-proofs` is the genuine source. The
+> mathematics below is correct; the provenance is not original.
+
 Builds the chosen radius, circle majorant/minorant bounds, and final contradiction
 for the Erdős–Fuchs theorem, completing the formalization started in the WIP files.
 
