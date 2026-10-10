@@ -52,7 +52,15 @@ theorem adj_irrefl (graph : Fin 15 → Bool) (i : Fin 6) :
 
 theorem adj_symm (graph : Fin 15 → Bool) (i j : Fin 6) :
     Adj graph i j ↔ Adj graph j i := by
-  simp only [Adj, ne_eq, eq_comm, pairIndex_symm i j]
+  constructor
+  · rintro ⟨hij, he⟩
+    refine ⟨Ne.symm hij, ?_⟩
+    rw [pairIndex_symm j i]
+    exact he
+  · rintro ⟨hji, he⟩
+    refine ⟨Ne.symm hji, ?_⟩
+    rw [pairIndex_symm i j]
+    exact he
 
 /-- Three distinct vertices forming a triangle. -/
 def ContainsTriangle (graph : Fin 15 → Bool) : Prop :=
