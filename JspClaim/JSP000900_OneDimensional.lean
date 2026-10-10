@@ -53,8 +53,8 @@ theorem real_distinct_distances_lower_bound
     have hpx := hp_le x hxP
     have hpy := hp_le y hyP
     rw [Real.dist_eq, Real.dist_eq,
-      abs_of_nonneg (sub_nonneg.mpr hpx),
-      abs_of_nonneg (sub_nonneg.mpr hpy)] at hxy
+      abs_of_nonpos (sub_nonpos.mpr hpx),
+      abs_of_nonpos (sub_nonpos.mpr hpy)] at hxy
     linarith
   calc
     P.card - 1 = (P.erase p).card := (Finset.card_erase_of_mem hp).symm
