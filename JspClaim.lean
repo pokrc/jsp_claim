@@ -9,3 +9,8 @@ import JspClaim.JSP000689
 import JspClaim.JSP000689_Exponential
 import JspClaim.JSP000876
 import JspClaim.JSP000947
+import JspClaim.JSP000900_Statement
+import JspClaim.JSP000900_Radial
+import JspClaim.JSP000900_OneDimensional
+import JspClaim.JSP000900_ConditionalRate
+import JspClaim.JSP000900_DistanceProfiles
