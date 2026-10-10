@@ -68,3 +68,10 @@ theorem naive_product_obstruction_at_five :
   norm_num
 
 end JSP000086
+
+-- Reproducible audit of the *auxiliary* facts (not of the open conjecture).
+#print axioms JSP000086.exact_target
+#print axioms JSP000086.reciprocal_decomposition
+#print axioms JSP000086.remainder_term_positive
+#print axioms JSP000086.first_three_terms
+#print axioms JSP000086.naive_product_obstruction_at_five
