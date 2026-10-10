@@ -48,16 +48,20 @@ File: research/JSP000404/SourceAudit.lean.
    It does NOT define α_N by the answer formula.
 2. Proves guaranteed_mono: any guaranteed angle for n points remains
    guaranteed for m points whenever n <= m.
-3. Proves elementary_lower_bound: every N >= 3 point set has a genuine
+3. Defines alpha N AS A REAL SUPREMUM of the actual guaranteed angle
+   thresholds (not by Sendov's answer), and proves alpha_mono for all
+   3 <= n <= m, using explicit upper boundedness and nonemptiness.
+4. Proves elementary_lower_bound: every N >= 3 point set has a genuine
    angle >= π/3, using Mathlib's triangle-angle-sum theorem.
-4. Proves five_in_reported_lower_band / six_in_reported_upper_band and
-   printed_values_descend: 4π/5 > 2π/3 is a precise contradiction
-   in the source's printed pair of expressions.
-5. Proves website_bands_cannot_both_hold, using guaranteed_mono:
-   a five-point guarantee of 4π/5 conflicts with a six-point ceiling
-   of 2π/3.
-6. Proves corrected_values_increase, an arithmetic consistency check
-   at the same boundary.
+5. Proves five_in_reported_lower_band / six_in_reported_upper_band and
+   printed_values_descend: 4π/5 > 2π/3 contradicts the original
+   supremum definition. posted_alpha_values_impossible is an exact,
+   unconditional theorem about this literal definition.
+6. Proves printed_values_descend_every_band for every n >= 2;
+   website_bands_cannot_both_hold connects the error with the
+   actual geometric guarantee.
+7. Proves corrected_values_increase, an arithmetic consistency check
+   at the N=5/N=6 boundary.
 
 The exact-rational Python checker checks 61 band transitions, n=3..63,
 without floating point; it is a regression, not a mathematical proof of
