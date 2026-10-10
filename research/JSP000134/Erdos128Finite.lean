@@ -1,56 +1,47 @@
-import Mathlib.Data.Fin.Basic
-import Mathlib.Tactic
+import Mathlib
 
 /-!
-# JSP-000134 / Erdős problem 128 — a six-vertex finite verification
+# JSP-000134 / Erdős 128: a completely proved finite six-vertex case
 
-This module formalizes ONLY the six-vertex case. The unrestricted mathematical
-problem remains OPEN. In particular, this is NOT a prize-ready formalization.
+IMPORTANT: The unrestricted original problem is OPEN. This file DOES NOT solve
+the original problem and must not be registered for a prize.
 
-The original condition (as in Formal Conjectures, Erdős 128) requires every
-induced subgraph on at least floor(n/2) vertices to contain strictly more than
-n²/50 edges. For n = 6, it implies that each triple spans at least one edge.
-The theorem below proves that this forces a triangle, by a finite kernel
-decision of the classical Ramsey fact R(3,3) = 6.
+It formalizes a genuine, unconditional six-vertex theorem using the standard
+R(3,3) argument. The original n-vertex density premise, for n=6, forces
+every triple to span at least one edge. R(3,3)=6 then forces a triangle.
 
-A 6-vertex labelled undirected graph is encoded by a 15-bit natural mask (Fin 32768).
-All 15 unordered pairs receive distinct indices (independently checked below).
-No custom axioms, sorry, admit, or native_decide are used.
+No `sorry`, `admit`, `native_decide`, or custom mathematical axioms are used.
+The small `decide` invocations below only verify edge-index bijectivity.
 -/
 
 namespace JSP000134
 
-/-- Canonical index of the unordered pair {i,j} among the 15 pairs of Fin 6.
-It is only used when i ≠ j. -/
+/-- The 15 unordered edges of the complete graph on six labelled vertices. -/
 def pairIndex (i j : Fin 6) : Fin 15 :=
   let a := min i.val j.val
   let b := max i.val j.val
   Fin.ofNat 15 (a * (11 - a) / 2 + (b - a - 1))
 
-/-- Equality of the indexing under swapping endpoints. -/
 theorem pairIndex_symm : ∀ i j : Fin 6, pairIndex i j = pairIndex j i := by
   decide
 
-/-- Distinct unordered edges have distinct bit indices. -/
 theorem pairIndex_injective :
     ∀ a b c d : Fin 6, a < b → c < d →
       pairIndex a b = pairIndex c d → a = c ∧ b = d := by
   decide
 
-/-- Every one of the 15 bits corresponds to a genuine unordered pair. -/
 theorem pairIndex_surjective :
     ∀ k : Fin 15, ∃ i j : Fin 6, i < j ∧ pairIndex i j = k := by
   decide
 
-/-- Adjacency in an undirected simple graph encoded by 15 Boolean edge bits. -/
-def Adj (graph : Fin 32768) (i j : Fin 6) : Bool :=
-  if i = j then false else graph.val.testBit (pairIndex i j).val
+/-- An edge bit is interpreted symmetrically; loops are absent. -/
+def Adj (graph : Fin 15 → Bool) (i j : Fin 6) : Bool :=
+  if i = j then false else graph (pairIndex i j)
 
-theorem adj_irrefl (graph : Fin 32768) (i : Fin 6) :
-    Adj graph i i = false := by
-  simp [Adj]
+theorem adj_irrefl (graph : Fin 15 → Bool) (i : Fin 6) :
+    Adj graph i i = false := by simp [Adj]
 
-theorem adj_symm (graph : Fin 32768) (i j : Fin 6) :
+theorem adj_symm (graph : Fin 15 → Bool) (i j : Fin 6) :
     Adj graph i j = Adj graph j i := by
   by_cases hij : i = j
   · subst j
@@ -58,61 +49,105 @@ theorem adj_symm (graph : Fin 32768) (i j : Fin 6) :
   · have hji : j ≠ i := Ne.symm hij
     simp only [Adj, if_neg hij, if_neg hji, pairIndex_symm i j]
 
-/-- Three distinct vertices forming a triangle. -/
-def ContainsTriangle (graph : Fin 32768) : Prop :=
+/-- A monochromatic triple for a Boolean edge-coloring (the edge colors need
+not satisfy symmetry for the combinatorial argument). -/
+def Mono (edge : Fin 6 → Fin 6 → Bool) (x y z : Fin 6) : Prop :=
+  x ≠ y ∧ y ≠ z ∧ x ≠ z ∧
+    ∃ c : Bool, edge x y = c ∧ edge y z = c ∧ edge x z = c
+
+def neighbors (edge : Fin 6 → Fin 6 → Bool) (v : Fin 6) (c : Bool) :
+    Finset (Fin 6) :=
+  (Finset.univ.erase v).filter (fun w => edge v w = c)
+
+theorem neighbors_total (edge : Fin 6 → Fin 6 → Bool) (v : Fin 6) :
+    (neighbors edge v true).card + (neighbors edge v false).card = 5 := by
+  have hpartition : neighbors edge v true ∪ neighbors edge v false =
+      Finset.univ.erase v := by
+    ext w
+    simp only [neighbors, Finset.mem_union, Finset.mem_filter]
+    cases edge v w <;> simp
+  have hdisjoint : Disjoint (neighbors edge v true) (neighbors edge v false) := by
+    rw [Finset.disjoint_left]
+    intro w ht hf
+    have ht' := (Finset.mem_filter.mp ht).2
+    have hf' := (Finset.mem_filter.mp hf).2
+    rw [ht'] at hf'
+    cases hf'
+  rw [← Finset.card_union_of_disjoint hdisjoint, hpartition]
+  simp
+
+theorem pigeonhole_edges (edge : Fin 6 → Fin 6 → Bool) (v : Fin 6) :
+    ∃ c : Bool, 3 ≤ (neighbors edge v c).card := by
+  have ht := neighbors_total edge v
+  by_cases hr : 3 ≤ (neighbors edge v true).card
+  · exact ⟨true, hr⟩
+  · exact ⟨false, by omega⟩
+
+private theorem bool_eq_not_of_ne {a c : Bool} (h : a ≠ c) : a = !c := by
+  cases a <;> cases c <;> simp_all
+
+/-- R(3,3) ≤ 6, via a fixed vertex and three neighbors of the same color.
+The proof is symbolic, not a brute force search over 32768 graphs. -/
+theorem ramsey_six (edge : Fin 6 → Fin 6 → Bool) :
+    ∃ x y z, Mono edge x y z := by
+  let v : Fin 6 := 0
+  obtain ⟨c, hc⟩ := pigeonhole_edges edge v
+  obtain ⟨x, y, z, hx, hy, hz, hxy, hxz, hyz⟩ :=
+    Finset.two_lt_card_iff.mp (by omega :
+      2 < (neighbors edge v c).card)
+  have hvx := (Finset.mem_erase.mp (Finset.mem_filter.mp hx).1).1
+  have hvy := (Finset.mem_erase.mp (Finset.mem_filter.mp hy).1).1
+  have hvz := (Finset.mem_erase.mp (Finset.mem_filter.mp hz).1).1
+  have evx := (Finset.mem_filter.mp hx).2
+  have evy := (Finset.mem_filter.mp hy).2
+  have evz := (Finset.mem_filter.mp hz).2
+  by_cases hcx : edge x y = c
+  · exact ⟨v, x, y, hvx.symm, hxy, hvy.symm, c, evx, hcx, evy⟩
+  by_cases hcy : edge y z = c
+  · exact ⟨v, y, z, hvy.symm, hyz, hvz.symm, c, evy, hcy, evz⟩
+  by_cases hcz : edge x z = c
+  · exact ⟨v, x, z, hvx.symm, hxz, hvz.symm, c, evx, hcz, evz⟩
+  exact ⟨x, y, z, hxy, hyz, hxz, !c,
+    bool_eq_not_of_ne hcx, bool_eq_not_of_ne hcy, bool_eq_not_of_ne hcz⟩
+
+def ContainsTriangle (graph : Fin 15 → Bool) : Prop :=
   ∃ i j k : Fin 6, i ≠ j ∧ j ≠ k ∧ i ≠ k ∧
     Adj graph i j = true ∧ Adj graph j k = true ∧ Adj graph i k = true
 
-/-- Three distinct vertices spanning no edge. -/
-def ContainsIndependentTriple (graph : Fin 32768) : Prop :=
+def ContainsIndependentTriple (graph : Fin 15 → Bool) : Prop :=
   ∃ i j k : Fin 6, i ≠ j ∧ j ≠ k ∧ i ≠ k ∧
     Adj graph i j = false ∧ Adj graph j k = false ∧ Adj graph i k = false
 
-/-- Computable decision procedures for the finite existential predicates. -/
-instance (graph : Fin 32768) : Decidable (ContainsTriangle graph) := by
-  unfold ContainsTriangle
-  infer_instance
+/-- A noncomputational proof of the universal Ramsey dichotomy. -/
+theorem ramsey_three_three_six (graph : Fin 15 → Bool) :
+    ContainsTriangle graph ∨ ContainsIndependentTriple graph := by
+  obtain ⟨i, j, k, hij, hjk, hik, c, h1, h2, h3⟩ := ramsey_six (Adj graph)
+  cases c with
+  | false => exact Or.inr ⟨i, j, k, hij, hjk, hik, h1, h2, h3⟩
+  | true => exact Or.inl ⟨i, j, k, hij, hjk, hik, h1, h2, h3⟩
 
-instance (graph : Fin 32768) : Decidable (ContainsIndependentTriple graph) := by
-  unfold ContainsIndependentTriple
-  infer_instance
-
-set_option maxRecDepth 100000 in
-set_option maxRecDepth 100000 in
-set_option maxHeartbeats 0 in
-/-- R(3,3) ≤ 6. Kernel-checked finite case analysis of all 2^15 graphs. -/
-theorem ramsey_three_three_six :
-    ∀ graph : Fin 32768,
-      ContainsTriangle graph ∨ ContainsIndependentTriple graph := by
-  letI : Decidable (∀ graph : Fin 32768,
-      ContainsTriangle graph ∨ ContainsIndependentTriple graph) :=
-    Fintype.decidableForallFintype
-  decide
-
-/-- The exact condition the original density hypothesis imposes on triples
-when n=6: 50 times their edge count must exceed 6²=36. -/
-def TripleDensity (graph : Fin 32768) : Prop :=
+/-- For n=6, the exact original inequality 50*|E(G[S])| > n²
+restricted to triples S (which are all the smallest qualifying subsets). -/
+def TripleDensity (graph : Fin 15 → Bool) : Prop :=
   ∀ i j k : Fin 6, i ≠ j → j ≠ k → i ≠ k →
     36 < 50 * ((if Adj graph i j then 1 else 0) +
       (if Adj graph j k then 1 else 0) +
       (if Adj graph i k then 1 else 0))
 
-/-- A triple satisfying the six-vertex density bound cannot be independent. -/
-theorem no_independent_triple (graph : Fin 32768)
+theorem no_independent_triple (graph : Fin 15 → Bool)
     (h : TripleDensity graph) : ¬ ContainsIndependentTriple graph := by
   rintro ⟨i, j, k, hij, hjk, hik, h1, h2, h3⟩
   have hd := h i j k hij hjk hik
   simp [h1, h2, h3] at hd
 
-/-- Complete six-vertex special case of the original Erdős 128 conjecture.
-The general n-vertex problem is NOT proved here. -/
-theorem erdos128_six_vertices (graph : Fin 32768)
+/-- Full proof of the six-vertex special case; NOT a proof for general n. -/
+theorem erdos128_six_vertices (graph : Fin 15 → Bool)
     (h : TripleDensity graph) : ContainsTriangle graph := by
   rcases ramsey_three_three_six graph with ht | hi
   · exact ht
   · exact False.elim (no_independent_triple graph h hi)
 
+#print axioms JSP000134.ramsey_six
 #print axioms JSP000134.erdos128_six_vertices
-#print axioms JSP000134.ramsey_three_three_six
 
 end JSP000134
