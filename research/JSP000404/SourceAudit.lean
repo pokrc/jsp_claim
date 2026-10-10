@@ -97,6 +97,18 @@ theorem printed_values_descend :
   have hpi := Real.pi_pos
   nlinarith
 
+/-- In fact the printed numerator-one lower value exceeds the upper
+value at *every* dyadic band boundary with parameter n ≥ 2.
+This algebraic fact is independent of the geometric model. -/
+theorem printed_values_descend_every_band (n : ℕ) (hn : 2 ≤ n) :
+    Real.pi * (1 - (1 : ℝ) / (n : ℝ)) <
+    Real.pi * (1 - (1 : ℝ) / (2 * (n : ℝ) - 1)) := by
+  have hn' : (1 : ℝ) < (n : ℝ) := by exact_mod_cast (show 1 < n by omega)
+  have hnlt : (n : ℝ) < 2 * (n : ℝ) - 1 := by linarith
+  have hdiv : (1 : ℝ) / (2 * (n : ℝ) - 1) < 1 / (n : ℝ) :=
+    one_div_lt_one_div_of_lt (by linarith : (0 : ℝ) < n) hnlt
+  nlinarith [mul_lt_mul_of_pos_left hdiv Real.pi_pos]
+
 /-- The actual geometric statement ruling out *both* printed branches.
 The second hypothesis says the optimum for six points is at most 2π/3.
 If the five-point lower branch really guaranteed 4π/5, then its
@@ -125,6 +137,7 @@ theorem corrected_values_increase :
 
 #print axioms JSP000404.guaranteed_mono
 #print axioms JSP000404.elementary_lower_bound
+#print axioms JSP000404.printed_values_descend_every_band
 #print axioms JSP000404.website_bands_cannot_both_hold
 #print axioms JSP000404.corrected_values_increase
 
