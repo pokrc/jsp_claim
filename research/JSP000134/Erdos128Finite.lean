@@ -68,12 +68,24 @@ def ContainsIndependentTriple (graph : Fin 32768) : Prop :=
   ∃ i j k : Fin 6, i ≠ j ∧ j ≠ k ∧ i ≠ k ∧
     Adj graph i j = false ∧ Adj graph j k = false ∧ Adj graph i k = false
 
+/-- Computable decision procedures for the finite existential predicates. -/
+instance (graph : Fin 32768) : Decidable (ContainsTriangle graph) := by
+  unfold ContainsTriangle
+  infer_instance
+
+instance (graph : Fin 32768) : Decidable (ContainsIndependentTriple graph) := by
+  unfold ContainsIndependentTriple
+  infer_instance
+
 set_option maxRecDepth 16384 in
 set_option maxHeartbeats 0 in
 /-- R(3,3) ≤ 6. Kernel-checked finite case analysis of all 2^15 graphs. -/
 theorem ramsey_three_three_six :
     ∀ graph : Fin 32768,
       ContainsTriangle graph ∨ ContainsIndependentTriple graph := by
+  letI : Decidable (∀ graph : Fin 32768,
+      ContainsTriangle graph ∨ ContainsIndependentTriple graph) :=
+    Fintype.decidableForallFintype
   decide
 
 /-- The exact condition the original density hypothesis imposes on triples
