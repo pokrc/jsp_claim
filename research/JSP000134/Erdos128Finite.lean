@@ -77,7 +77,8 @@ instance (graph : Fin 32768) : Decidable (ContainsIndependentTriple graph) := by
   unfold ContainsIndependentTriple
   infer_instance
 
-set_option maxRecDepth 16384 in
+set_option maxRecDepth 100000 in
+set_option maxRecDepth 100000 in
 set_option maxHeartbeats 0 in
 /-- R(3,3) ≤ 6. Kernel-checked finite case analysis of all 2^15 graphs. -/
 theorem ramsey_three_three_six :
