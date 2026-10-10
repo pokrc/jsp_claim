@@ -1,51 +1,64 @@
-# jsp_claim
+# jsp_claim — Lean 4 research and formalization
 
-Lean 4 + Mathlib formalizations for problems in the
-[Justin Sun Prize problem bank](https://github.com/TheJustinSunPrize/awards).
+[![Lean CI](https://github.com/pokrc/jsp_claim/actions/workflows/lean_action_ci.yml/badge.svg)](https://github.com/pokrc/jsp_claim/actions/workflows/lean_action_ci.yml)
 
-Owned and authored by **Yao Siqi** (GitHub: [pokrc](https://github.com/pokrc); email: yaosiqi777@163.com).
+This is an independently maintained Lean 4 + Mathlib repository for the [Justin Sun Prize problem bank](https://github.com/TheJustinSunPrize/awards). It contains formally checked **statements of specific scope**. A proof of a special case, a finite witness, or a corrected catalog statement is **not** automatically a proof of the complete original Erdős problem or an eligible prize submission.
 
-Every module here is a **complete Lean proof**: no `sorry`, no `admit`, no `native_decide`, no added
-axioms. Axiom audit for every main theorem reports only the standard Mathlib axioms
-`propext`, `Classical.choice`, `Quot.sound`. Toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0`.
+GitHub account: [pokrc](https://github.com/pokrc). See also [the POKRC repository directory](https://github.com/pokrc/POKRION-Speed-Drone/blob/main/PROJECTS.md).
+
+## Reproduce
+
+Pinned toolchain: `leanprover/lean4:v4.34.0`; Mathlib `v4.34.0`.
 
 ```bash
-git clone https://github.com/pokrc/jsp_claim && cd jsp_claim
-lake exe cache get && lake build JspClaim
+git clone https://github.com/pokrc/jsp_claim.git
+cd jsp_claim
+lake exe cache get
+lake build JspClaim
 ```
 
-## Modules and their submission status
+The Lean kernel establishes the actual types of compiled theorems, **not** whether a theorem matches the original published mathematical question. Review the precise statement and its mathematical provenance before reusing or citing it. Use `#print axioms Module.theorem` for a named theorem audit. A green workflow alone is not prize verification.
 
-| Module | JSP | What it proves | Submitted for |
-| --- | --- | --- | --- |
-| `JspClaim/JSP000301.lean` | JSP-000301 | `12167 = 23^3` and `12168 = 2^3·3^2·13^2` are consecutive powerful numbers, neither a square (Golomb's counterexample) | PR #1960 |
-| `JspClaim/JSP000689.lean` (+ `_helpers`) | JSP-000689 | Erdős–Lovász: a non-2-colourable `r`-uniform hypergraph has a vertex of degree `≥ 2^(r-1)/(4r)`, plus the Fano-plane example | PR #2054 |
-| `JspClaim/JSP000307.lean` | JSP-000307 | the witness `152, 153, 154` has strictly decreasing largest prime factors | printed statement of the entry; the source problem (Erdős #372) asks the infinitude version, stated in the module |
-| `JspClaim/JSP000598.lean` | JSP-000598 | the pair `(87, 88)` has central binomial coefficients with the same set of prime divisors | printed statement of the entry; the source problem (Erdős #730) asks the infinitude version, stated in the module |
-| `JspClaim/JSP000243.lean` | JSP-000243 | the shortest denominator interval with reciprocal sum `1` has span `4`, attained by `[2, 6]` | printed statement of the entry; the entry's cited source is Croot's asymptotic width law, stated in the module |
-| `JspClaim/JSP000546.lean` | JSP-000546 | the `k = 3` example `18·25·32 = 120^2` in an AP with `gcd(a,d) = 1` | printed statement of the entry; the source problem (Erdős #672) requires `k ≥ 4`, stated in the module |
-| `JspClaim/JSP000554.lean` | JSP-000554 | `(7, 11)` is a pair of consecutive primes with no integer of least prime factor `≥ 4` between them | submitted for the printed statement; the entry's recorded solution (Gafni–Tao, Erdős #682) answers the *almost all n* version affirmatively, stated in the module |
-| `JspClaim/JSP000876.lean` | JSP-000876 | intervals `[5k+1,5k+3]` have product `≡ 1 (mod 5)` | submitted for the printed statement; the source problem (Erdős #1056) requires contiguous intervals, stated in the module |
-| `JspClaim/JSP000947.lean` | JSP-000947 | `n = 45`: `45 − 2^k` is prime for every `1 < 2^k < 45` | submitted for the printed statement; the source problem (Erdős #1142) asks `n > 105` / infinitely many, stated in the module |
-| `JspClaim/JSP000554.lean` | JSP-000554 | `(7, 11)` is a pair of consecutive primes with no integer of least prime factor `≥ 4` between them | not submitted — the entry's recorded solution (Gafni–Tao, Erdős #682) answers the *almost all n* question in the affirmative |
+## Modules in `main`
 
-Each module states the exact scope of what it proves at the top of the file, and each submission
-repeats it, so no module is presented as proving more than it does.
+The following files **exist on the default branch** as of 2026-10-10. The last column is a scope note, not an award determination.
 
-## Removed modules
+| Lean module | Problem | Verified theorem scope / important limitation |
+| --- | --- | --- |
+| [JSP000301](JspClaim/JSP000301.lean) | #301 | Explicit Golomb counterexample: the consecutive powerful numbers 12167 and 12168 are not squares; [official PR #1960](https://github.com/TheJustinSunPrize/awards/pull/1960) remains open |
+| [JSP000689](JspClaim/JSP000689.lean) ([helpers](JspClaim/JSP000689_helpers.lean)) | #689 | Erdős–Lovász hypergraph degree statement under the file's hypotheses and Fano-plane example; [official PR #2054](https://github.com/TheJustinSunPrize/awards/pull/2054) remains open |
+| [JSP000307](JspClaim/JSP000307.lean) | #307 | Single explicit witness (152, 153, 154); source Erdős #372 asks for infinitely many |
+| [JSP000598](JspClaim/JSP000598.lean) | #598 | Single pair (87, 88); source Erdős #730 asks for infinitely many |
+| [JSP000243](JspClaim/JSP000243.lean) | #243 | Minimum interval span 4 for a finite base case; cited Croot source concerns asymptotic width |
+| [JSP000546](JspClaim/JSP000546.lean) | #546 | Example for k=3; source Erdős #672 requires k≥4 |
+| [JSP000554](JspClaim/JSP000554.lean) | #554 | Explicit pair (7,11), rather than the source's almost-all-n theorem |
+| [JSP000876](JspClaim/JSP000876.lean) | #876 | Constructed intervals may be non-adjacent; the source asks for contiguous intervals |
+| [JSP000947](JspClaim/JSP000947.lean) | #947 | Explicit n=45 case; original Erdős #1142 asks for n>105 or infinitely many |
 
-Earlier commits also contained `JSP000183`, `JSP000625`, `JSP000876`, `JSP000947`, `JSP000558`
-(with `JSP000689_bridge` and scratch files). They were removed and are **not** submitted:
+**Do not treat these scope-mismatched cases as complete proofs of the original problem.** Do not assert eligibility, priority or award acceptance from this table. The PR references above identify publicly submitted work, not merged/accepted contributions.
 
-* `JSP000183`, `JSP000625` — followed existing public formalizations (`ekalvi/erdos-193` and
-  `plby/lean-proofs` `Erdos763.lean`) closely enough that they are not independent work. The
-  submission guidelines forbid registering a copy of someone else's proof; these must not be
-  registered as mine.
-* `JSP000876` — the construction used non-adjacent intervals, while Erdős #1056 requires the
-  intervals to be contiguous, so the file does not address the problem.
-* `JSP000947` — `n = 45` is one of the six known values of Erdős #1142; the entry asks for `n > 105`
-  or infinitely many.
-* `JSP000558` — only the `k = 2` case study, a partial result.
+## Research branches (not merged into `main`)
 
-Corrections for the underlying description defects were filed with the bank: #3263 (JSP-000876),
-#3264 (JSP-000947), #3342 (JSP-000554).
+| Branch | Topic | Status |
+| --- | --- | --- |
+| [research/jsp-000086-erdos68-20261010](https://github.com/pokrc/jsp_claim/tree/research/jsp-000086-erdos68-20261010) | Erdős #68 reciprocal-factorial series; exact statement and auxiliary lemmas | **Unsolved original conjecture; research only** |
+| [research/jsp-000134-erdos-128](https://github.com/pokrc/jsp_claim/tree/research/jsp-000134-erdos-128) | Six-vertex problem audit | [Draft PR #1](https://github.com/pokrc/jsp_claim/pull/1), research only |
+| [research/jsp000404-sendov-audit](https://github.com/pokrc/jsp_claim/tree/research/jsp000404-sendov-audit) | Sendov / Erdős 504 audit | [Draft PR #2](https://github.com/pokrc/jsp_claim/pull/2), research only |
+
+These branches are isolated to prevent incomplete proof investigations from being mistaken for formal competition submissions.
+
+## Historical attempts and corrections
+
+Early commits additionally contained JSP000183, JSP000625 and JSP000558. Those files are **absent from the current default branch**. JSP000183 and JSP000625 tracked external formalizations too closely to justify an independent submission; JSP000558 was a partial k=2 case. Relevant third-party credit must always be preserved.
+
+JSP000876 and JSP000947 were previously described as "removed," **but both are currently present on `main`**; this README corrects that mismatch and labels their proof scopes instead. JSP000554 previously appeared twice in the module list; only one module exists.
+
+The catalog-description corrections referred to in the older history are #3263 (#876), #3264 (#947), and #3342 (#554) in [the official awards repository](https://github.com/TheJustinSunPrize/awards). These references do not imply they were accepted.
+
+## Submission policy
+
+Read [official contribution requirements](https://github.com/TheJustinSunPrize/awards/blob/main/CONTRIBUTING.md) and the [award process](https://github.com/TheJustinSunPrize/awards/blob/main/docs/award-process.md). A qualifying Lean submission requires the *complete original problem* to have a reviewed mathematical solution and a matching reproducible Lean proof; it also requires attribution, a pinned original proof commit and maintainer review. Do not file claims for isolated finite witnesses or unproved conjectures.
+
+## License
+
+See [LICENSE](LICENSE) for this repository. Other cited authors and upstream formalizations retain their own attribution and licensing.
