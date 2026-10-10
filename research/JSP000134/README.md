@@ -22,8 +22,8 @@ rounding. The distinction matters for odd `n`.
 
 - `Erdos128Finite.lean` gives a **15-bit encoding of all labelled simple
   graphs on six vertices**, a certified symmetry and unique-pair-index audit,
-  an exact kernel decision of the finite Ramsey statement `R(3,3) <= 6`, and
-  an independent Lean theorem: if every triple spans more than `36/50`
+  a symbolic Lean proof of the finite Ramsey statement `R(3,3) <= 6`, and
+  an unconditional six-vertex theorem: if every triple spans more than `36/50`
   edges, the graph contains a triangle.
 - `check.py` independently enumerates all labelled graphs on 3, 4, 5
   and 6 vertices. It directly checks the correct strict local induced-edge
@@ -55,17 +55,21 @@ lake exe cache get
 lake env lean research/JSP000134/Erdos128Finite.lean
 ```
 
-Check the actual GitHub Actions result before stating that the Lean step
-passed. The `#print axioms` commands at the end of the Lean source report
+The outcome is supported only after the complete research workflow
+has passed for the current commit (an unrelated root library build alone is
+not sufficient). The `#print axioms` commands at the end of the Lean source report
 the theorem's assumptions. Do not replace the finite decision with
 `native_decide`, `sorry`, `admit` or a custom mathematical axiom.
 
 ## Scope / contribution / priority
 
-This is a narrowly scoped, original research and verification package
+This is a narrowly scoped research and verification package
 prepared with AI assistance for GitHub account **pokrc**. The elementary
 Ramsey mathematics is classical and is not claimed as a new mathematical
-discovery. The research is **not** a complete Lean formalization of the
+discovery. The symbolic `ramsey_six` proof is adapted from the MIT-licensed
+`DesignExamples/Ramsey.lean` in `egison/egison-prover` (see
+`THIRD_PARTY_NOTICE.txt`). The six-vertex graph encoding, statement
+connection and independent Python regression form this research package. The research is **not** a complete Lean formalization of the
 original all-`n` problem, does **not** establish award eligibility or
 priority, and must not be submitted as a complete award claim.
 
