@@ -8,6 +8,8 @@ Euclidean distance-counting interface. They are NOT the main lower bound
 of the distinct-distances conjecture.
 -/
 
+set_option maxHeartbeats 2000000
+
 namespace JSP000900
 
 /-- Every distance to an anchor point in the finite set is among the
