@@ -25,8 +25,8 @@ theorem exponential_bound_mul (r : ℕ) (hr : 8 ≤ r) :
       have hexp : (2 : ℝ) ^ ((k + 1) - 1) = 2 * (2 : ℝ) ^ (k - 1) := by
         have hpos : 1 ≤ k := by omega
         calc
-          (2 : ℝ) ^ ((k + 1) - 1) = (2 : ℝ) ^ k := by congr 1; omega
-          _ = (2 : ℝ) ^ ((k - 1) + 1) := by congr 1; omega
+          (2 : ℝ) ^ ((k + 1) - 1) = (2 : ℝ) ^ k := by congr 1 <;> omega
+          _ = (2 : ℝ) ^ ((k - 1) + 1) := by congr 1 <;> omega
           _ = 2 * (2 : ℝ) ^ (k - 1) := by rw [pow_succ]; ring
       calc
         (9 / 8 : ℝ) ^ (k + 1) * (4 * ((k + 1 : ℕ) : ℝ))
