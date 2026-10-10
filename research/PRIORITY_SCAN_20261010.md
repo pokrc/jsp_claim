@@ -59,3 +59,28 @@ The linked third-party sources are **evidence of prior claims and substantial pr
 "First viable-looking gap" is **not** "first successfully verified formalizer." The source proof of #900 itself is under independent mathematical review and its Lean formalization is extremely difficult. A quick speculative official PR with only a statement would **not** improve priority and could misrepresent the project. Continue screening for smaller solved theorems with a defensible attribution trail and no earlier complete proof.
 
 **Authoring attribution:** Screening notes and source comparison prepared for `pokrc`; citations remain owned by their respective authors. No award, solution, or original-formalizer authorship claim is made here.
+
+
+## Verified kernel development (new research branch, 2026-10-10)
+
+The following statements are proven **as specifically scoped** (not equivalent to the full conjecture). GitHub Actions `lake build` and the extended `ProofAudit.lean` must both succeed at the selected source SHA to count them as kernel verified.
+
+| Source | Concrete statement |
+| --- | --- |
+| `JspClaim/JSP000900_Statement.lean` | Exact main proposition represented as **definition only**; no theorem of type `OriginalQuestion` |
+| `JspClaim/JSP000900_Radial.lean` | For distance-injective anchor p, `|Δ(P)| ≥ |P|-1`; two distinct points determine a distance |
+| `JspClaim/JSP000900_OneDimensional.lean` | Complete and unconditional **one-dimensional** result `|Δ(P)| ≥ |P|-1` for finite nonempty `P⊆ℝ` |
+| `JspClaim/JSP000900_ConditionalRate.lean` | All d≥3: `|Δ(P)| ≥ (1/2)|P|^(2/d)` **assuming an anchor with injective radial distances** |
+| `JspClaim/JSP000900_DistanceProfiles.lean` | Theorem `|P| ≤ (|Δ(P)|+1)^k` if k anchors in P **separate all points by distance profiles**; distinct-distance monotonicity for subsets; exclusion of zero |
+
+### Actual full-proof dependencies still open
+
+The [source paper's reduction section](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-higher-dimensional-Erdos-distinct-distances-conjecture-September-23-2026/build/sections/reduction.tex) explicitly derives its final contradiction from three non-elementary results: the **sparse-cones theorem**, a **rich-motion theorem**, and a **uniform algebraic concentration theorem**. The source also contains substantial auxiliary arguments:
+
+- [Polynomial interpolation and multiplicity](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-higher-dimensional-Erdos-distinct-distances-conjecture-September-23-2026/build/sections/polynomial.tex): Hilbert-function ranks, regular component equations, interpolation at isolated points, intersection multiplicities and projection bounds
+- [Secants and terminal curves](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-higher-dimensional-Erdos-distinct-distances-conjecture-September-23-2026/build/sections/secants.tex): finite and generic secant/projection statements
+- [Multiscale profiles](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-higher-dimensional-Erdos-distinct-distances-conjecture-September-23-2026/build/sections/profiles.tex): scale-window partitioning and polynomial rank propagation
+- [Sparse-cones proof](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-higher-dimensional-Erdos-distinct-distances-conjecture-September-23-2026/build/sections/sparse-cones.tex): contradiction to sparse directional coverings
+- [Incidence estimates](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-higher-dimensional-Erdos-distinct-distances-conjecture-September-23-2026/build/sections/classical-incidence.tex): real and complex polynomial geometry tools
+
+No Lean files in this research branch prove those three top-level inputs or the main unconditional statement. Importing these as fresh `axiom` declarations, stipulating a general-position hypothesis, or replacing the exponent by a weaker bound would not meet contest rules. Independent review of the source paper remains outstanding.
