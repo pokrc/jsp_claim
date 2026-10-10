@@ -12,3 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: leanprover/lean-action@v1
+      - name: Audit award-candidate theorem statements and axioms
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake env lean ProofAudit.lean | tee proof-audit.log
+          if grep -E 'sorryAx|Lean\.trustCompiler|Lean\.ofReduceBool' proof-audit.log; then
+            echo 'Disallowed proof dependency detected'
+            exit 1
+          fi
