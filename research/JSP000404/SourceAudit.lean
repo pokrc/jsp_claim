@@ -76,6 +76,39 @@ theorem elementary_lower_bound (N : ℕ) (hN : 3 ≤ N) :
     linarith
   exact ⟨z, hz, x, hx, y, hy, hxz.symm, hxy, hyz.symm, h₃⟩
 
+/-! ### The actual extremal quantity (no preloaded answer formula) -/
+
+/-- Direct supremum definition of Erdős 504's α_N, literally over the
+angles guaranteed in every N-point planar configuration. -/
+noncomputable def alpha (N : ℕ) : ℝ :=
+  sSup {θ : ℝ | GuaranteedAngle N θ}
+
+/-- The collection of guaranteed angle thresholds is bounded above by π.
+We select one configuration of N distinct planar points; no geometric
+configuration or result is assumed as an axiom. -/
+theorem guaranteed_bddAbove (N : ℕ) :
+    BddAbove {θ : ℝ | GuaranteedAngle N θ} := by
+  classical
+  obtain ⟨s, hs⟩ := Infinite.exists_subset_card_eq Plane N
+  refine ⟨Real.pi, ?_⟩
+  intro θ hθ
+  obtain ⟨x, _, y, _, z, _, _, _, _, ha⟩ := hθ s hs
+  exact ha.trans (EuclideanGeometry.angle_le_pi x y z)
+
+/-- When at least three vertices are present, there exists a
+guaranteed threshold: π/3. -/
+theorem guaranteed_nonempty (N : ℕ) (hN : 3 ≤ N) :
+    ({θ : ℝ | GuaranteedAngle N θ} : Set ℝ).Nonempty :=
+  ⟨Real.pi / 3, elementary_lower_bound N hN⟩
+
+/-- Monotonicity of the actual supremum α_N from its defining predicate,
+not from the published answer formula. -/
+theorem alpha_mono {n m : ℕ} (hn : 3 ≤ n) (hnm : n ≤ m) :
+    alpha n ≤ alpha m := by
+  unfold alpha
+  exact csSup_le_csSup (guaranteed_bddAbove m) (guaranteed_nonempty n hn)
+    (fun θ hθ => guaranteed_mono hnm hθ)
+
 /-- N=5 is in the website's lower band when n=3. -/
 theorem five_in_reported_lower_band :
     2 ^ (3 - 1 : ℕ) < 5 ∧
@@ -126,6 +159,19 @@ theorem website_bands_cannot_both_hold
   have hstrict := printed_values_descend
   linarith
 
+/-- The two printed α-values are literally impossible for the
+original supremum-defined geometry, with no hypothetical envelope
+assumptions and no additional axioms. -/
+theorem posted_alpha_values_impossible :
+    ¬ (alpha 5 = Real.pi * (1 - (1 : ℝ) / 5) ∧
+       alpha 6 = Real.pi * (1 - (1 : ℝ) / 3)) := by
+  rintro ⟨h5, h6⟩
+  have hm : alpha 5 ≤ alpha 6 :=
+    alpha_mono (by decide : 3 ≤ 5) (by decide : 5 ≤ 6)
+  rw [h5, h6] at hm
+  have hstrict := printed_values_descend
+  exact (not_le_of_gt hstrict) hm
+
 /-- The corrected 1995 lower-band value at five points is 3π/5,
 and it does not violate the six-point upper value 2π/3.
 This verifies only the numerical consistency of the correction. -/
@@ -136,6 +182,8 @@ theorem corrected_values_increase :
   nlinarith
 
 #print axioms JSP000404.guaranteed_mono
+#print axioms JSP000404.alpha_mono
+#print axioms JSP000404.posted_alpha_values_impossible
 #print axioms JSP000404.elementary_lower_bound
 #print axioms JSP000404.printed_values_descend_every_band
 #print axioms JSP000404.website_bands_cannot_both_hold
