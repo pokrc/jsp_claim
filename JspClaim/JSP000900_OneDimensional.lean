@@ -45,13 +45,14 @@ theorem real_distinct_distances_lower_bound
   let p : ℝ := P.min' hP
   have hp : p ∈ P := Finset.min'_mem P hP
   have hp_le (q : ℝ) (hq : q ∈ P) : p ≤ q := by
-    exact Finset.min'_le q hq
+    exact P.min'_le q hq
   have hinj : Set.InjOn (fun q : ℝ => dist p q) (↑(P.erase p) : Set ℝ) := by
     intro x hx y hy hxy
     have hxP : x ∈ P := (Finset.mem_erase.mp hx).2
     have hyP : y ∈ P := (Finset.mem_erase.mp hy).2
     have hpx := hp_le x hxP
     have hpy := hp_le y hyP
+    change dist p x = dist p y at hxy
     rw [Real.dist_eq, Real.dist_eq,
       abs_of_nonpos (sub_nonpos.mpr hpx),
       abs_of_nonpos (sub_nonpos.mpr hpy)] at hxy
