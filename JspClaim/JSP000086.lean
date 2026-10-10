@@ -1,3 +1,5 @@
+import Mathlib
+
 /-!
 # JSP-000086 / Erdős Problem 68 — checked auxiliary facts
 
@@ -12,8 +14,6 @@ References:
 
 No part of this module is an award-qualifying solution.
 -/
-
-import Mathlib
 
 noncomputable section
 
