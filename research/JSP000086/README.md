@@ -10,7 +10,7 @@ S=\sum_{n=2}^{\infty}\frac{1}{n!-1}.
 \]
 Does \(S\not\in\mathbb{Q}\)? The n=2 term is **1**. Changing the lower endpoint to 3 is a statement mismatch unless the omitted rational term is carefully accounted for.
 
-Formal target: \Irrational (∑' n : ℕ, (1 : ℝ) / (((n+2).factorial : ℝ) - 1))\; see `JspClaim/JSP000086.lean`. Its `exact_target` theorem is only a definitional-equivalence check. It is not a proof of irrationality.
+Formal target: `Irrational (∑' n : ℕ, (1 : ℝ) / (((n + 2).factorial : ℝ) - 1))`; see `JspClaim/JSP000086.lean`. Its `exact_target` theorem is only a definitional-equivalence check. It is not a proof of irrationality.
 
 ## 2. Provable auxiliary steps
 
