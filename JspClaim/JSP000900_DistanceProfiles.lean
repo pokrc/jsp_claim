@@ -16,6 +16,26 @@ sharp conjectured n^(2/d) bound for arbitrary P.
 
 namespace JSP000900
 
+/-- Monotonicity of distinct Euclidean distances under restriction to
+subsets, a sound reduction for the sampling arguments in the source paper. -/
+theorem distanceValues_mono {d : ℕ}
+    {P Q : Finset (EuclideanSpace ℝ (Fin d))}
+    (hPQ : P ⊆ Q) :
+    distanceValues P ⊆ distanceValues Q := by
+  classical
+  intro r hr
+  obtain ⟨⟨p, q⟩, hpq, rfl⟩ := Finset.mem_image.mp hr
+  obtain ⟨hpqP, hpqne⟩ := Finset.mem_filter.mp hpq
+  obtain ⟨hp, hq⟩ := Finset.mem_product.mp hpqP
+  exact pair_distance_mem Q p q (hPQ hp) (hPQ hq) hpqne
+
+/-- Taking a subset cannot create more distinct distances. -/
+theorem distanceValues_card_mono {d : ℕ}
+    {P Q : Finset (EuclideanSpace ℝ (Fin d))}
+    (hPQ : P ⊆ Q) :
+    (distanceValues P).card ≤ (distanceValues Q).card :=
+  Finset.card_le_card (distanceValues_mono hPQ)
+
 /-- Nonzero distances in the spectrum cannot vanish. -/
 theorem zero_not_mem_distanceValues {d : ℕ}
     (P : Finset (EuclideanSpace ℝ (Fin d))) :
@@ -78,5 +98,7 @@ theorem card_le_distance_spectrum_pow_of_injective_profile {d k : ℕ}
 
 end JSP000900
 
+#print axioms JSP000900.distanceValues_mono
+#print axioms JSP000900.distanceValues_card_mono
 #print axioms JSP000900.zero_not_mem_distanceValues
 #print axioms JSP000900.card_le_distance_spectrum_pow_of_injective_profile
