@@ -42,36 +42,34 @@ theorem pairIndex_surjective :
     ∀ k : Fin 15, ∃ i j : Fin 6, i < j ∧ pairIndex i j = k := by
   decide
 
-/-- Edges of a loop-free, symmetric six-vertex graph represented by 15 bits. -/
-def Adj (graph : Fin 15 → Bool) (i j : Fin 6) : Prop :=
-  i ≠ j ∧ graph (pairIndex i j) = true
+/-- Adjacency in an undirected simple graph encoded by 15 Boolean edge bits. -/
+def Adj (graph : Fin 15 → Bool) (i j : Fin 6) : Bool :=
+  if i = j then false else graph (pairIndex i j)
 
 theorem adj_irrefl (graph : Fin 15 → Bool) (i : Fin 6) :
-    ¬ Adj graph i i := by
+    Adj graph i i = false := by
   simp [Adj]
 
 theorem adj_symm (graph : Fin 15 → Bool) (i j : Fin 6) :
-    Adj graph i j ↔ Adj graph j i := by
-  constructor
-  · rintro ⟨hij, he⟩
-    refine ⟨Ne.symm hij, ?_⟩
-    rw [pairIndex_symm j i]
-    exact he
-  · rintro ⟨hji, he⟩
-    refine ⟨Ne.symm hji, ?_⟩
-    rw [pairIndex_symm i j]
-    exact he
+    Adj graph i j = Adj graph j i := by
+  by_cases hij : i = j
+  · subst j
+    rfl
+  · have hji : j ≠ i := Ne.symm hij
+    simp only [Adj, if_neg hij, if_neg hji, pairIndex_symm i j]
 
 /-- Three distinct vertices forming a triangle. -/
 def ContainsTriangle (graph : Fin 15 → Bool) : Prop :=
   ∃ i j k : Fin 6, i ≠ j ∧ j ≠ k ∧ i ≠ k ∧
-    Adj graph i j ∧ Adj graph j k ∧ Adj graph i k
+    Adj graph i j = true ∧ Adj graph j k = true ∧ Adj graph i k = true
 
 /-- Three distinct vertices spanning no edge. -/
 def ContainsIndependentTriple (graph : Fin 15 → Bool) : Prop :=
   ∃ i j k : Fin 6, i ≠ j ∧ j ≠ k ∧ i ≠ k ∧
-    ¬ Adj graph i j ∧ ¬ Adj graph j k ∧ ¬ Adj graph i k
+    Adj graph i j = false ∧ Adj graph j k = false ∧ Adj graph i k = false
 
+set_option maxRecDepth 16384 in
+set_option maxHeartbeats 0 in
 /-- R(3,3) ≤ 6. Kernel-checked finite case analysis of all 2^15 graphs. -/
 theorem ramsey_three_three_six :
     ∀ graph : Fin 15 → Bool,
