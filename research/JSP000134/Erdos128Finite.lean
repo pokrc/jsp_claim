@@ -13,7 +13,7 @@ n²/50 edges. For n = 6, it implies that each triple spans at least one edge.
 The theorem below proves that this forces a triangle, by a finite kernel
 decision of the classical Ramsey fact R(3,3) = 6.
 
-A 6-vertex labelled undirected graph is encoded by 15 Boolean edge bits.
+A 6-vertex labelled undirected graph is encoded by a 15-bit natural mask (Fin 32768).
 All 15 unordered pairs receive distinct indices (independently checked below).
 No custom axioms, sorry, admit, or native_decide are used.
 -/
@@ -43,14 +43,14 @@ theorem pairIndex_surjective :
   decide
 
 /-- Adjacency in an undirected simple graph encoded by 15 Boolean edge bits. -/
-def Adj (graph : Fin 15 → Bool) (i j : Fin 6) : Bool :=
-  if i = j then false else graph (pairIndex i j)
+def Adj (graph : Fin 32768) (i j : Fin 6) : Bool :=
+  if i = j then false else graph.val.testBit (pairIndex i j).val
 
-theorem adj_irrefl (graph : Fin 15 → Bool) (i : Fin 6) :
+theorem adj_irrefl (graph : Fin 32768) (i : Fin 6) :
     Adj graph i i = false := by
   simp [Adj]
 
-theorem adj_symm (graph : Fin 15 → Bool) (i j : Fin 6) :
+theorem adj_symm (graph : Fin 32768) (i j : Fin 6) :
     Adj graph i j = Adj graph j i := by
   by_cases hij : i = j
   · subst j
@@ -59,12 +59,12 @@ theorem adj_symm (graph : Fin 15 → Bool) (i j : Fin 6) :
     simp only [Adj, if_neg hij, if_neg hji, pairIndex_symm i j]
 
 /-- Three distinct vertices forming a triangle. -/
-def ContainsTriangle (graph : Fin 15 → Bool) : Prop :=
+def ContainsTriangle (graph : Fin 32768) : Prop :=
   ∃ i j k : Fin 6, i ≠ j ∧ j ≠ k ∧ i ≠ k ∧
     Adj graph i j = true ∧ Adj graph j k = true ∧ Adj graph i k = true
 
 /-- Three distinct vertices spanning no edge. -/
-def ContainsIndependentTriple (graph : Fin 15 → Bool) : Prop :=
+def ContainsIndependentTriple (graph : Fin 32768) : Prop :=
   ∃ i j k : Fin 6, i ≠ j ∧ j ≠ k ∧ i ≠ k ∧
     Adj graph i j = false ∧ Adj graph j k = false ∧ Adj graph i k = false
 
@@ -72,20 +72,20 @@ set_option maxRecDepth 16384 in
 set_option maxHeartbeats 0 in
 /-- R(3,3) ≤ 6. Kernel-checked finite case analysis of all 2^15 graphs. -/
 theorem ramsey_three_three_six :
-    ∀ graph : Fin 15 → Bool,
+    ∀ graph : Fin 32768,
       ContainsTriangle graph ∨ ContainsIndependentTriple graph := by
   decide
 
 /-- The exact condition the original density hypothesis imposes on triples
 when n=6: 50 times their edge count must exceed 6²=36. -/
-def TripleDensity (graph : Fin 15 → Bool) : Prop :=
+def TripleDensity (graph : Fin 32768) : Prop :=
   ∀ i j k : Fin 6, i ≠ j → j ≠ k → i ≠ k →
     36 < 50 * ((if Adj graph i j then 1 else 0) +
       (if Adj graph j k then 1 else 0) +
       (if Adj graph i k then 1 else 0))
 
 /-- A triple satisfying the six-vertex density bound cannot be independent. -/
-theorem no_independent_triple (graph : Fin 15 → Bool)
+theorem no_independent_triple (graph : Fin 32768)
     (h : TripleDensity graph) : ¬ ContainsIndependentTriple graph := by
   rintro ⟨i, j, k, hij, hjk, hik, h1, h2, h3⟩
   have hd := h i j k hij hjk hik
@@ -93,7 +93,7 @@ theorem no_independent_triple (graph : Fin 15 → Bool)
 
 /-- Complete six-vertex special case of the original Erdős 128 conjecture.
 The general n-vertex problem is NOT proved here. -/
-theorem erdos128_six_vertices (graph : Fin 15 → Bool)
+theorem erdos128_six_vertices (graph : Fin 32768)
     (h : TripleDensity graph) : ContainsTriangle graph := by
   rcases ramsey_three_three_six graph with ht | hi
   · exact ht
