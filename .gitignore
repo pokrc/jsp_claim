@@ -1,1 +1,17 @@
 .lake/
+
+# Lean/editor/OS local artifacts
+*.olean
+*.ilean
+*.cmi
+.DS_Store
+Thumbs.db
+*~
+*.swp
+.vscode/
+.idea/
+
+# Credentials and machine-local environment
+.env
+.env.*
+!.env.example
