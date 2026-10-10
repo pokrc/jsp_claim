@@ -19,6 +19,16 @@ lake build JspClaim
 
 The Lean kernel establishes the actual types of compiled theorems, **not** whether a theorem matches the original published mathematical question. Review the precise statement and its mathematical provenance before reusing or citing it. Use `#print axioms Module.theorem` for a named theorem audit. A green workflow alone is not prize verification.
 
+## Prize-readiness theorem bridges (2026-10-10)
+
+The [award-readiness evidence report](docs/PRIZE_READINESS_20261010.md) records official claim status, known earlier competing proofs, and verification requirements. [Internal PR #3](https://github.com/pokrc/jsp_claim/pull/3) merged the following **additional Lean theorems** without rewriting the original pinned proof commits:
+
+- [`JSP000301_StatementBridge.lean`](JspClaim/JSP000301_StatementBridge.lean): defines the universally quantified positive-integer question and proves `JSP000301.published_question_false`.
+- [`JSP000689_Exponential.lean`](JspClaim/JSP000689_Exponential.lean): proves a literal exponential rate `(9/8)^r` for `r ≥ 8` in the finite Erdős–Lovász setting, theorem `JSP000689.erdos_lovasz_exponential_finite`.
+- [`ProofAudit.lean`](ProofAudit.lean): reproducible theorem and axiom audit; run `lake env lean ProofAudit.lean` after the pinned build. CI verifies that neither `sorryAx` nor compiler-trust axioms appear in the report.
+
+**These improvements do not make an award claim eligible.** Official contributions #1960 and #2054 remain under review; independent authorship and first verified proof priority are assessed by the upstream maintainers.
+
 ## Modules in `main`
 
 The following files **exist on the default branch** as of 2026-10-10. The last column is a scope note, not an award determination.
