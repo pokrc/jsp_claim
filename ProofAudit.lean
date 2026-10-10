@@ -28,6 +28,8 @@ checks the type of the still-unproved conjecture.
 -/
 #check JSP000900.OriginalQuestion
 #check JSP000900.distanceValues_nonneg
+#check JSP000900.distanceValues_mono
+#check JSP000900.distanceValues_card_mono
 #check JSP000900.zero_not_mem_distanceValues
 #check JSP000900.card_sub_one_le_distanceValues_of_radial_inj
 #check JSP000900.one_le_distanceValues_card_of_two_points
@@ -36,6 +38,8 @@ checks the type of the still-unproved conjecture.
 #check JSP000900.card_le_distance_spectrum_pow_of_injective_profile
 
 #print axioms JSP000900.distanceValues_nonneg
+#print axioms JSP000900.distanceValues_mono
+#print axioms JSP000900.distanceValues_card_mono
 #print axioms JSP000900.zero_not_mem_distanceValues
 #print axioms JSP000900.card_sub_one_le_distanceValues_of_radial_inj
 #print axioms JSP000900.one_le_distanceValues_card_of_two_points
