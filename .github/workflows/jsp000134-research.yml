@@ -1,0 +1,22 @@
+name: JSP-000134 finite-case research
+
+on:
+  push:
+    branches:
+      - research/jsp-000134-erdos-128
+  pull_request:
+    paths:
+      - 'research/JSP000134/**'
+      - '.github/workflows/jsp000134-research.yml'
+  workflow_dispatch:
+
+jobs:
+  verify-finite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+      - name: Check the exact six-vertex Lean theorem (including axioms)
+        run: lake env lean research/JSP000134/Erdos128Finite.lean
+      - name: Independent exhaustive Python regression for n=3..6
+        run: python3 research/JSP000134/check.py
